@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import Footer from "../components/Footer";
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { getProfile, updateProfile } from "../api/auth";
-import MyLoader from "../components/MyLoader";
 
 const Profile = () => {
   const [userInfo, setUserInfo] = useState({});
@@ -21,13 +20,13 @@ const Profile = () => {
     mutationFn: () => updateProfile(userInfo),
     onSuccess: () => {
       queryClient.invalidateQueries(["getProfile"]);
-      navigate("/");
+      navigate("/dashboard");
     },
   });
   if (!me) return <div>We couldn't find your profile!</div>;
   const { image, username, balance } = me;
 
-  if (isLoading) return <h1>{MyLoader}</h1>;
+  if (isLoading) return <h1>loading...</h1>;
 
   const handleChange = (e) => {
     if (e.target.name === "image") {
@@ -59,7 +58,7 @@ const Profile = () => {
           required
         />
         <div className="card-actions">
-          <button className="btn btn-primary" onSubmit={mutate}>
+          <button className="btn btn-primary" onClick={mutate}>
             Save
           </button>
         </div>

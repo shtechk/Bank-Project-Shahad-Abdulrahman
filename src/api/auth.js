@@ -2,7 +2,10 @@ import instance from ".";
 import { removeToken, storeToken } from "./storage";
 
 const login = async (userInfo) => {
-  const { data } = await instance.post("/auth/login", userInfo);
+  const { data } = await instance.post(
+    "/mini-project/api/auth/login",
+    userInfo
+  );
   storeToken(data.token);
   return data;
 };
@@ -12,7 +15,10 @@ const register = async (userInfo) => {
   for (let key in userInfo) {
     formData.append(key, userInfo[key]);
   }
-  const { data } = await instance.post("/auth/register", formData);
+  const { data } = await instance.post(
+    "/mini-project/api/auth/register",
+    formData
+  );
 
   storeToken(data.token);
   return data;
@@ -26,7 +32,7 @@ const logout = () => {
 };
 
 const getProfile = async () => {
-  const { data } = await instance.get("/auth/me");
+  const { data } = await instance.get("/mini-project/api/auth/me");
   return data;
 };
 
@@ -35,8 +41,11 @@ const updateProfile = async (userInfo) => {
   for (let key in userInfo) {
     formData.append(key, userInfo[key]);
   }
-  const { data } = await instance.put(`/auth/profile`, formData);
-  storeToken(data.token);
+  const { data } = await instance.put(
+    `/mini-project/api/auth/profile`,
+    formData
+  );
+
   return data;
 };
 
