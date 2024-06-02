@@ -41,7 +41,6 @@ const Login = () => {
       <div className="divider lg:divider-horizontal"></div>
       <div className="grid flex-grow h-32 card bg-base-300 rounded-box place-items-center">
         <h1>Login</h1>
-
         <p>
           Don't have an account? <Link to={"/register"}>Register Here</Link>
         </p>
