@@ -1,5 +1,5 @@
 import instance from ".";
-import { storeToken } from "./storage";
+import { removeToken, storeToken } from "./storage";
 
 const login = async (userInfo) => {
   const { data } = await instance.post("/auth/login", userInfo);
@@ -17,6 +17,13 @@ const register = async (userInfo) => {
   storeToken(data.token);
   return data;
 };
+const getAllUsers = async () => {
+  const { data } = await instance.get("/mini-project/api/auth/users");
+  return data;
+};
+const logout = () => {
+  removeToken();
+};
 
 const getProfile = async () => {
   const { data } = await instance.get("/auth/me");
@@ -33,9 +40,23 @@ const updateProfile = async (userInfo) => {
   return data;
 };
 
-const getTransactions = async () => {
-  const { data } = await instance.get("/transactions/my");
-  return data;
+const getAllTransactions = async () => {
+  const res = await instance.get("/mini-project/api/transactions/my");
+  return res.data;
 };
 
-export { login, register, getProfile, updateProfile, getTransactions };
+const deposit = async (amount) => {
+  const res = await instance.post("/mini-project/api/transactions/deposit");
+  return res;
+};
+
+export {
+  login,
+  register,
+  getProfile,
+  updateProfile,
+  getAllUsers,
+  logout,
+  getAllTransactions,
+  deposit,
+};
