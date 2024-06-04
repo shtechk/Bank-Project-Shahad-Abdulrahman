@@ -55,7 +55,9 @@ const getAllTransactions = async () => {
 };
 
 const deposit = async (amount) => {
-  const res = await instance.post("/mini-project/api/transactions/deposit");
+  const res = await instance.put("/mini-project/api/transactions/deposit", {
+    amount,
+  });
   return res;
 };
 

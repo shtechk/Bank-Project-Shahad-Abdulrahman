@@ -1,88 +1,10 @@
-// import { useQuery } from "@tanstack/react-query";
-// import React, { useState } from "react";
-// import { getAllTransactions } from "../api/auth";
-
-// const Transactions = () => {
-//   const [filter, setFilter] = useState("");
-//   // const [filteredData, setFilteredData] = useState(data);
-
-//   const { data } = useQuery();
-
-//   useQuery({
-//     queryKey: ["transactions"],
-//     queryFn: getAllTransactions,
-//   });
-
-//   const Transaction = data;
-//   // ?.filter((Transactions) => Transactions.name.toLowerCase().includes(query.toLowerCase()))
-//   // .map((Transactions) => <Transaction)
-
-//   // useEffect(() => {
-//   //   setFilteredData(
-//   //     data.filter((item) =>
-//   //       Object.values(item).some((val) =>
-//   //         String(val).toLowerCase().includes(filter.toLowerCase())
-//   //       )
-//   //     )
-//   //   );
-//   // }, [filter]);
-
-//   return (
-//     <div className="container mx-auto p-4">
-//       <h1 className="text-2xl font-bold mb-4">Transactions Table</h1>
-//       <input
-//         type="text"
-//         placeholder="Search..."
-//         // value={filter}
-//         // onChange={(e) => setFilter(e.target.value)}
-//         className="border p-2 mb-4 w-full"
-//       />
-//       <table className="table-auto w-full border-collapse border border-gray-200">
-//         <thead>
-//           <tr>
-//             <th className="border border-gray-300 px-4 py-2">Amount</th>
-//             <th className="border border-gray-300 px-4 py-2">Date</th>
-//             <th className="border border-gray-300 px-4 py-2">Type</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {filteredData.map((item) => (
-//             <tr key={item.id}>
-//               <td
-//                 className={`border border-gray-300 px-4 py-2 ${
-//                   item.type === "Credit" ? "text-green-500" : "text-red-500"
-//                 }`}
-//               >
-//                 {item.amount}
-//               </td>
-//               <td className="border border-gray-300 px-4 py-2">{item.date}</td>
-//               <td
-//                 c
-//                 className={`border border-gray-300 px-4 py-2 ${
-//                   item.type === "Credit" ? "text-green-500" : "text-red-500"
-//                 }`}
-//               >
-//                 {item.type}
-//               </td>
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-//     </div>
-//   );
-// };
-
-// export default Transactions;
-
-// // Sample data
-
-// // export default FilterableTable;
-
 import React, { useState } from "react";
 import { getAllTransactions } from "../api/auth";
 import { useQuery } from "@tanstack/react-query";
 import DatePicker from "react-datepicker";
 import TransactionsItem from "../components/TransactionsItem";
+
+import "react-datepicker/dist/react-datepicker.css";
 
 const TransactionList = () => {
   const [query, setQuery] = useState("");
@@ -112,7 +34,7 @@ const TransactionList = () => {
   };
 
   const queryTransactions = transactions?.filter((transaction) => {
-    return transaction.amount.toString() == query;
+    return transaction.amount.toString().includes(query);
   });
 
   const filteredTransactions = queryTransactions?.filter((transaction) => {
@@ -121,7 +43,7 @@ const TransactionList = () => {
   });
 
   const datedTransactions = filteredTransactions?.filter((transaction) => {
-    const transactionDate = new Date(transaction.date);
+    const transactionDate = new Date(transaction.createdAt);
     return (
       (!fromDate || transactionDate >= fromDate) &&
       (!toDate || transactionDate <= toDate)
@@ -129,7 +51,7 @@ const TransactionList = () => {
   });
 
   const transactionList = datedTransactions?.map((transaction) => {
-    return <TransactionsItem transaction={transaction} key={transaction.id} />;
+    return <TransactionsItem transaction={transaction} key={transaction._id} />;
   });
 
   if (isLoading)
@@ -145,35 +67,70 @@ const TransactionList = () => {
         margin: "1rem",
       }}
     >
-      <div className="input-group rounded">
+      <div className="input-group rounded relative ">
         <input
           onChange={handleSearch}
           type="search"
-          className="form-control rounded"
+          className="w-full rounded-md border-black py-2.5 pe-10 shadow-sm sm:text-sm bg-white "
           placeholder="Search"
           aria-label="Search"
           aria-describedby="search-addon"
         />
+        <span className="absolute inset-y-0 px-3 end-0 grid w-10 place-content-center">
+          <button type="button" className="text-black hover:text-gray-700">
+            <span className="sr-only text-black">Search</span>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="h-4 w-4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+              />
+            </svg>
+          </button>
+        </span>
       </div>
       <div>
-        <select value={filterType} onChange={handleSelect}>
+        <select
+          className=" bg-white border m-5 flex justify-center text-black border-gray py-2"
+          value={filterType}
+          onChange={handleSelect}
+        >
           <option value="all">All Transactions</option>
           <option value="withdraw">Withdrawals</option>
           <option value="deposit">Deposits</option>
           <option value="transfer">Transfers</option>
         </select>
       </div>
-      <div>
+      <div className=" text-black flex justify-center m-5">
         <label htmlFor="from-date">From Date:</label>
-        <DatePicker selected={fromDate} onChange={handleFromDate} />
+        <DatePicker
+          className=" bg-white border border-gray"
+          selected={fromDate}
+          onChange={handleFromDate}
+        />
         <label htmlFor="to-date">To Date:</label>
-        <DatePicker selected={toDate} onChange={handleToDate} />
+        <DatePicker
+          className=" bg-white border border-gray"
+          selected={toDate}
+          onChange={handleToDate}
+          dateFormat="dd/MM/yyyy"
+        />
       </div>
       <table style={{ width: "100%", borderCollapse: "collapse" }}>
         <thead>
           <tr>
             <th>Amount</th>
-            <th>Date</th>
+            <th type="date" dateFormat="dd/MM/yyyy">
+              Date
+            </th>
             <th>Type</th>
           </tr>
         </thead>

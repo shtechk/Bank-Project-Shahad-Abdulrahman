@@ -13,7 +13,7 @@ const Home = () => {
     mutationFn: () => register(userInfo),
     onSuccess: () => {
       setUser(true);
-      navigate("/profile");
+      navigate("/dashboard");
     },
   });
 
