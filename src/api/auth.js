@@ -38,4 +38,34 @@ const getTransactions = async () => {
   return data;
 };
 
-export { login, register, getProfile, updateProfile, getTransactions };
+const withdrawFunds = async (amount) => {
+  const { data } = await instance.put("/transactions/withdraw", {
+    amount,
+  });
+  return data;
+};
+
+const depositFunds = async (amount) => {
+  const { data } = await instance.put("/transactions/deposit", {
+    amount,
+  });
+  return data;
+};
+
+const transferFunds = async (amount, username) => {
+  const { data } = await instance.put(`/transactions/transfer/${username}`, {
+    amount,
+  });
+  return data;
+};
+
+export {
+  login,
+  register,
+  getProfile,
+  updateProfile,
+  getTransactions,
+  withdrawFunds,
+  depositFunds,
+  transferFunds,
+};

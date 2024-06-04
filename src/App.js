@@ -5,8 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import UserContext from "./context/UserContext";
 import { useEffect, useState } from "react";
 import { getToken } from "./api/storage";
-import Home from "./pages/Profile";
-import Transactions from "./pages/Transactions";
+import Home from "./pages/Home";
 import Users from "./pages/Users";
 import Profile from "./pages/Profile";
 import Login from "./pages/Login";
@@ -29,7 +28,6 @@ function App() {
         {/**because useState is set to false, therefore if user is logged in, aka true, then navbar will show */}
         <Routes>
           <Route path="/" Component={Home} />
-          <Route path="/transactions" Component={Transactions} />
           <Route path="/users" Component={Users} />
           <Route path="/profile" Component={Profile} />
           <Route path="/login" Component={Login} />
