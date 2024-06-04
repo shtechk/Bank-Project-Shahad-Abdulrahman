@@ -1,97 +1,53 @@
-import React, { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { depositFunds, getProfile, withdrawFunds } from "../api/auth";
-import Modal from "../components/Modal";
+import React, { useContext, useState } from "react";
+import UserContext from "../context/UserContext";
+import { Link, useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const [amount, setAmount] = useState({});
-  const [type, setType] = useState("deposit");
-  const [showModal, setShowModal] = useState(false);
-
-  const queryClient = useQueryClient();
-
-  const { data } = useQuery({
-    queryKey: ["me"],
-    queryFn: getProfile,
-  });
-
-  const { mutate: withdrawMutate } = useMutation({
-    mutationKey: ["withdrawFunds", amount],
-    mutationFn: () => withdrawFunds(amount),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["amount"]);
-    },
-    onError: (e) => {
-      alert("check for enough funds");
-    },
-  });
-
-  const { mutate: depositMutate } = useMutation({
-    mutationKey: ["depositFunds", amount],
-    mutationFn: () => depositFunds(amount),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["amount"]);
-    },
-  });
-
-  // const { balance } = getProfile();
-  const toggleType = () => {
-    if (type === "deposit") {
-      setType("withdraw");
-    } else {
-      setType("deposit");
-    }
-  };
-
-  const handleChange = (e) => setAmount(e.target.value);
+  const [userInfo, setUserInfo] = useState({});
+  const [user, setUser] = useContext(UserContext);
+  const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-center flex-col min-h-screen">
-      <div className="p-6 border border-gray-300 rounded-lg w-50% ">
-        <h1>Your available balance:</h1>
-        <p>{data?.balance}</p>
-        <button
-          className="ml-auto w-[70%] rounded-md text-sm md:text-sm border border-black flex justify-center items-center bg-green-400 hover:bg-green-600"
-          onClick={() => {
-            setShowModal(true);
-          }}
-        >
-          Transfer Funds
-        </button>
-      </div>
+    <section className="bg-gray-900 text-white">
+      <div
+        className="flex h-screen bg-cover bg-center"
+        style={{
+          backgroundImage:
+            'url("https://img.freepik.com/free-vector/flat-design-poker-table-background_23-2151016809.jpg?t=st=1717005088~exp=1717008688~hmac=87d03b056221f21ca64f38204f7dcda30822d4914fed4dfcdaa2fe4c4cc24186&w=2000")',
+        }}
+      >
+        <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-clip-text text-3xl font-extrabold text-transparent sm:text-5xl">
+              Welcome!
+              <span className="sm:block"> To The Bank</span>
+            </h2>
+          </div>
+        </div>
 
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="p-4 border border-gray-300 rounded-lg">
-          <label className="label cursor-pointer">
-            <span className="label-text">Deposit</span>
-            <input
-              type="checkbox"
-              className="toggle toggle-success"
-              checked={type === "withdraw"}
-              onChange={toggleType}
-            />
-            <span className="label-text">Withdraw</span>
-          </label>
-          <div>
-            <input
-              type="amount"
-              placeholder="Type here"
-              className="input input-bordered w-full max-w-xs"
-              onChange={handleChange}
-            />
+        <div className="w-1/2 flex items-center justify-center p-8">
+          <div className="max-w-md w-full">
+            <h1 className="text-l font-bold mb-4 text-center text-white py-10 ">
+              <Link
+                to="/register"
+                className="px-7 py-5 bg-white text-black rounded hover:bg-blue-600 transition-colors"
+              >
+                Sign Up
+              </Link>
+            </h1>
 
-            <button
-              className="btn btn-active"
-              type="submit"
-              onClick={type === "deposit" ? depositMutate : withdrawMutate}
-            >
-              Submit
-            </button>
+            <h1 className="text-l font-bold mb-4 text-center text-white ">
+              <Link
+                to="/login"
+                className="px-10 py-5 bg-white text-black rounded hover:bg-blue-600 transition-colors "
+              >
+                login
+              </Link>
+            </h1>
           </div>
         </div>
       </div>
-      <Modal show={showModal} setShowModal={setShowModal} />
-    </div>
+    </section>
   );
 };
 

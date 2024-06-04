@@ -8,9 +8,12 @@ import { getToken } from "./api/storage";
 import Home from "./pages/Home";
 import Users from "./pages/Users";
 import Profile from "./pages/Profile";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+
+import Register from "./components/Register";
+import DashBoard from "./pages/DashBoard";
+import TransactionList from "./pages/Transactions";
 import Footer from "./components/Footer";
+import Login from "./pages/Login";
 
 function App() {
   const [user, setUser] = useState(false);
@@ -24,10 +27,12 @@ function App() {
   return (
     <UserContext.Provider value={[user, setUser]}>
       <div>
-        {user && <Navbar />}{" "}
-        {/**because useState is set to false, therefore if user is logged in, aka true, then navbar will show */}
+        {user && <Navbar />}
+
         <Routes>
           <Route path="/" Component={Home} />
+          <Route path="/dashboard" Component={DashBoard} />
+          <Route path="/transactions" Component={TransactionList} />
           <Route path="/users" Component={Users} />
           <Route path="/profile" Component={Profile} />
           <Route path="/login" Component={Login} />
@@ -40,3 +45,11 @@ function App() {
 }
 
 export default App;
+
+{
+  /* <footer className="footer footer-center p-4 bg-base-300 text-base-content">
+  <aside>
+    <p>Copyright © 2024 - All right reserved by ACME Industries Ltd</p>
+  </aside>
+</footer> */
+}
